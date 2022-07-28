@@ -1,0 +1,23 @@
+{
+    "name": "Lead Verifier",
+    "description": "Automated Lead verification",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": [
+        "activeTab",
+        "storage",
+        "unlimitedStorage",
+        "tabs",
+        "cookies"
+    ],
+    "content_scripts":[
+        {
+            "matches": [
+                "https://www.facebook.com/marketplace/item/*"
+            ],
+            "js": ["content.js"],
+            "css": ["content.css"],
+            "run_at": "document_idle"
+        }
+    ]
+}
