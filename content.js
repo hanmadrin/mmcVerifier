@@ -84,7 +84,10 @@ const verifierGetItemFromMonday = async () => {
         for(let i=0;i<keys.length;i++){
             if(keys[i]==="Status"){
                 const status = JSON.parse(validItemValues[keys[i]]);
-                const statusIndex = status.index;
+                let statusIndex = 5;
+                if(status!==null){
+                    statusIndex = status.index;
+                }
                 validItemValues[keys[i]] = indexToStatus[statusIndex];
             }else{
                 validItemValues[keys[i]] = JSON.parse(validItemValues[keys[i]]);
