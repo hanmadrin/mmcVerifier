@@ -8,7 +8,8 @@
         "storage",
         "unlimitedStorage",
         "tabs",
-        "cookies"
+        "cookies",
+        "contextMenus"
     ],
     "content_scripts":[
         {

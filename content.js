@@ -16,6 +16,8 @@ class ChromeStorage{
         });
     }
 }
+// on ctrl + s
+
 const sleep = (ms) => {return new Promise(resolve => setTimeout(resolve, ms));}
 const mondayFetch = async (query) => {
     const mondayResponse = await fetch (
@@ -24,7 +26,8 @@ const mondayFetch = async (query) => {
             method: 'post',
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE1NTQ3NzM5NCwidWlkIjoyMTc2MjYwNiwiaWFkIjoiMjAyMi0wNC0xMlQxMzo0NjozOS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg0NzExMCwicmduIjoidXNlMSJ9.mpXq7PtWbmneakwja8iB091bZFnElYif7Ji1IyBmmSA'
+                'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE1NTQ3NzM5NCwidWlkIjoyMTc2MjYwNiwiaWFkIjoiMjAyMi0wNC0xMlQxMzo0NjozOS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg0NzExMCwicmduIjoidXNlMSJ9.mpXq7PtWbmneakwja8iB091bZFnElYif7Ji1IyBmmSA',
+                'API-Version' : '2023-07'
             },
             body: JSON.stringify({query})
         }
@@ -175,17 +178,17 @@ const verifierUpdateItemToMonday = async(updateData,itemId)=>{
         table.appendChild(statusRow);
     
         //Series
-        const seriesRow = document.createElement('tr');
-        const seriesKeyCell = document.createElement('td');
-        seriesKeyCell.innerText = "Series";
-        const seriesValueCell = document.createElement('td');
-        const seriesInput = document.createElement('input');
-        seriesInput.id = 'verifierSeries';
-        seriesInput.value = mondayValues['Series'];
-        seriesValueCell.appendChild(seriesInput);
-        seriesRow.appendChild(seriesKeyCell);
-        seriesRow.appendChild(seriesValueCell);
-        table.appendChild(seriesRow);
+        // const seriesRow = document.createElement('tr');
+        // const seriesKeyCell = document.createElement('td');
+        // seriesKeyCell.innerText = "Series";
+        // const seriesValueCell = document.createElement('td');
+        // const seriesInput = document.createElement('input');
+        // seriesInput.id = 'verifierSeries';
+        // seriesInput.value = mondayValues['Series'];
+        // seriesValueCell.appendChild(seriesInput);
+        // seriesRow.appendChild(seriesKeyCell);
+        // seriesRow.appendChild(seriesValueCell);
+        // table.appendChild(seriesRow);
     
         //Vin#
         const vinRow = document.createElement('tr');
@@ -205,14 +208,18 @@ const verifierUpdateItemToMonday = async(updateData,itemId)=>{
         saveButton.innerText = 'Save';
         saveButton.id = 'verifierSaveButton';
         saveButton.addEventListener('click', async()=>{
+            saveButton.disabled = true;
+            saveButton.classList.add('disabled');
             const updates = {};
             updates['Status'] = statusSelect.value;
-            updates['Series'] = seriesInput.value;
+            // updates['Series'] = seriesInput.value;
             updates['Vin#'] = vinInput.value;
             await verifierUpdateItemToMonday(updates,mondayValues.id);
             const updatedNotification = document.createElement('div');
             updatedNotification.innerText = 'Updated';
             dynamicFrom.appendChild(updatedNotification);
+            saveButton.disabled = false;
+            saveButton.classList.remove('disabled');
         });
         dynamicFrom.appendChild(table);
         dynamicFrom.appendChild(saveButton);
@@ -221,7 +228,26 @@ const verifierUpdateItemToMonday = async(updateData,itemId)=>{
     }
     
     document.body.appendChild(dynamicFrom);
-
+    document.addEventListener('keydown', async (e)=>{
+        if(e.ctrlKey && e.keyCode === 83){
+            e.preventDefault();
+            // click on save button
+            const saveButton = document.getElementById('verifierSaveButton');
+            saveButton.click();
+        }
+    });
+    document.addEventListener('keyup', async (e)=>{
+        if(e.ctrlKey ){
+            e.preventDefault();
+            console.log('ctrl up');
+        }
+    });
+    // const openingVerifierOptions = ()=>{};
+    // chrome.contextMenus.create({
+    //     title: "Open Verifier Form",
+    //     contexts:["selection"],  // ContextType
+    //     onclick: openingVerifierOptions // A callback function
+    // });
 
 })();
 
