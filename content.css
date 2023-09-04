@@ -18,7 +18,7 @@
     align-items: center;
     /* pointer-events: none;
     opacity: 0; */
-    transition: all 1s ease;
+    
 }
 /* #dynamicForm.hide{
     width: 50px;
@@ -49,7 +49,7 @@
     border-radius: 5px;
     background: #f1f1f1;
     cursor: pointer;
-    transition: all 0.3s ease;    
+    
 }
 #verifierSaveButton{
     background: #f1f1f1;

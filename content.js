@@ -228,20 +228,20 @@ const verifierUpdateItemToMonday = async(updateData,itemId)=>{
     }
     
     document.body.appendChild(dynamicFrom);
-    document.addEventListener('keydown', async (e)=>{
-        if(e.ctrlKey && e.keyCode === 83){
-            e.preventDefault();
-            // click on save button
-            const saveButton = document.getElementById('verifierSaveButton');
-            saveButton.click();
-        }
-    });
-    document.addEventListener('keyup', async (e)=>{
-        if(e.ctrlKey ){
-            e.preventDefault();
-            console.log('ctrl up');
-        }
-    });
+    // document.addEventListener('keydown', async (e)=>{
+    //     if(e.ctrlKey && e.keyCode === 83){
+    //         e.preventDefault();
+    //         // click on save button
+    //         const saveButton = document.getElementById('verifierSaveButton');
+    //         saveButton.click();
+    //     }
+    // });
+    // document.addEventListener('keyup', async (e)=>{
+    //     if(e.ctrlKey ){
+    //         e.preventDefault();
+    //         console.log('ctrl up');
+    //     }
+    // });
     // const openingVerifierOptions = ()=>{};
     // chrome.contextMenus.create({
     //     title: "Open Verifier Form",
