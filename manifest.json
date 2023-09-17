@@ -11,6 +11,9 @@
         "cookies",
         "contextMenus"
     ],
+    "action": {
+        "default_popup": "popup.html"
+    },
     "content_scripts":[
         {
             "matches": [
