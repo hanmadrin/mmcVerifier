@@ -71,25 +71,41 @@ const indexToStatus = {
 
 const verifierGetItemFromMonday = async () => {
     const boardId = globalData.boardId;
+    // const itemQuery = `
+    //     query{
+    //         items_by_column_values (board_id: ${boardId}, column_id: "text7", column_value: "${window.location.href}") {
+    //             id,
+    //             column_values(){
+    //                 value,
+    //                 title
+    //             }
+    //         }
+    //     }
+    // `;
     const itemQuery = `
         query{
-            items_by_column_values (board_id: ${boardId}, column_id: "text7", column_value: "${window.location.href}") {
-                id,
-                column_values(){
-                    value,
-                    title
+            items_page_by_column_values(board_id: ${boardId}, columns:[{id:"text7", column_values:"${window.location.href}"}], limit:1){
+                items{
+                    id,
+                    column_values(){
+                        value,
+                        title
+                    }
                 }
             }
-        }
-    `;
+        }`;
     let itemCount = 0;
 
     let titleCheckData = await mondayFetch(itemQuery); 
-    if(titleCheckData.data.items_by_column_values.length!=0){
-        itemCount = titleCheckData.data.items_by_column_values.length;
+    // if(titleCheckData.data.items_by_column_values.length!=0){
+    if(titleCheckData.data.items_page_by_column_values.items.length!=0){
+        // itemCount = titleCheckData.data.items_by_column_values.length;
+        itemCount = titleCheckData.data.items_page_by_column_values.items.length;
         const validItemValues = {};
-        const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
-        validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
+        // const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
+        const itemValues = titleCheckData.data.items_page_by_column_values.items[itemCount-1].column_values;
+        // validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
+        validItemValues.id = titleCheckData.data.items_page_by_column_values.items[itemCount-1].id;
         const validItemTitles = Object.keys(validItemTitlesId);
         for(let i=0;i<itemValues.length;i++){
             if(validItemTitles.includes(itemValues[i].title)){
