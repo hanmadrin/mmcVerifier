@@ -29,7 +29,7 @@ const fixedData = {
     }
 };
 const sleep = (ms) => {return new Promise(resolve => setTimeout(resolve, ms));}
-const mondayFetch = async (query) => {
+const mondayFetch = async (query,apiVerison="2024-01") => {
     const metaInformation = new ChromeStorage('metaInformation');
     const metaInformationValues = await metaInformation.GET();
     const defaultApi = metaInformationValues.defaultApi;
@@ -40,7 +40,7 @@ const mondayFetch = async (query) => {
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization' : defaultApi,
-                'API-Version' : '2023-07'
+                'API-Version' : apiVerison
             },
             body: JSON.stringify({query})
         }
