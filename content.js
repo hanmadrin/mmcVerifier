@@ -89,7 +89,7 @@ const verifierGetItemFromMonday = async () => {
                     id,
                     column_values(){
                         value,
-                        title
+                        text
                     }
                 }
             }
@@ -108,8 +108,8 @@ const verifierGetItemFromMonday = async () => {
         validItemValues.id = titleCheckData.data.items_page_by_column_values.items[itemCount-1].id;
         const validItemTitles = Object.keys(validItemTitlesId);
         for(let i=0;i<itemValues.length;i++){
-            if(validItemTitles.includes(itemValues[i].title)){
-                    validItemValues[itemValues[i].title] = itemValues[i].value;
+            if(validItemTitles.includes(itemValues[i].text)){
+                    validItemValues[itemValues[i].text] = itemValues[i].value;
             }
         }
         const keys = Object.keys(validItemValues);
