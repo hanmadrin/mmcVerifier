@@ -58,13 +58,16 @@ const indexToStatus = {
 
 const verifierGetItemFromMonday = async () => {
     const boardId = globalData.boardId;
+    // items_by_column_values (board_id: ${boardId}, column_id: "text7", column_value: "${window.location.href}") {
     const itemQuery = `
         query{
-            items_by_column_values (board_id: ${boardId}, column_id: "text7", column_value: "${window.location.href}") {
-                id,
-                column_values(){
-                    value,
-                    title
+            items_page_by_column_values (board_id: ${boardId}, columns: [{column_id: "text7", column_values: ["${window.location.href}"]}]) {
+                items{
+                    id,
+                    column_values(){
+                        value,
+                        title
+                    }
                 }
             }
         }
@@ -73,10 +76,12 @@ const verifierGetItemFromMonday = async () => {
 
     let titleCheckData = await mondayFetch(itemQuery); 
     if(titleCheckData.data.items_by_column_values.length!=0){
-        itemCount = titleCheckData.data.items_by_column_values.length;
+        itemCount = titleCheckData.data.items_page_by_column_values.items.length;
         const validItemValues = {};
-        const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
-        validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
+        // const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
+        const itemValues = titleCheckData.data.items_page_by_column_values.items[0].column_values;
+        // validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
+        validItemValues.id = titleCheckData.data.items_page_by_column_values.items[0].id;
         const validItemTitles = Object.keys(validItemTitlesId);
         for(let i=0;i<itemValues.length;i++){
             if(validItemTitles.includes(itemValues[i].title)){
