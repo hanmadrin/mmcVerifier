@@ -79,7 +79,11 @@ const verifierGetItemFromMonday = async () => {
                     id,
                     column_values{
                         value,
-                        title:text
+                        text
+                        column{
+                            id
+                            title
+                        }
                     }
                 }
             }
@@ -92,13 +96,13 @@ const verifierGetItemFromMonday = async () => {
         itemCount = titleCheckData.data.items_page_by_column_values.items.length;
         const validItemValues = {};
         // const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
-        const itemValues = titleCheckData.data.items_page_by_column_values.items[0].column_values;
+        const itemValues = titleCheckData.data.items_page_by_column_values.items[itemCount-1].column_values;
         // validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
-        validItemValues.id = titleCheckData.data.items_page_by_column_values.items[0].id;
+        validItemValues.id = titleCheckData.data.items_page_by_column_values.items[itemCount-1].id;
         const validItemTitles = Object.keys(validItemTitlesId);
         for(let i=0;i<itemValues.length;i++){
-            if(validItemTitles.includes(itemValues[i].text)){
-                    validItemValues[itemValues[i].text] = itemValues[i].value;
+            if(validItemTitles.includes(itemValues[i].column.title)){
+                    validItemValues[itemValues[i].column.title] = itemValues[i].value;
             }
         }
         const keys = Object.keys(validItemValues);
