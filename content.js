@@ -17,17 +17,30 @@ class ChromeStorage{
     }
 }
 // on ctrl + s
-
+const fixedData = {
+    metaInformation: {
+        defaultApi: {
+            title: 'Default API',
+            type: 'text',
+            defaultValue: '',
+            point: 'value',
+            interactive: true,
+        }
+    }
+};
 const sleep = (ms) => {return new Promise(resolve => setTimeout(resolve, ms));}
-const mondayFetch = async (query) => {
+const mondayFetch = async (query,apiVerison="2024-01") => {
+    const metaInformation = new ChromeStorage('metaInformation');
+    const metaInformationValues = await metaInformation.GET();
+    const defaultApi = metaInformationValues.defaultApi;
     const mondayResponse = await fetch (
         "https://api.monday.com/v2",
         {
             method: 'post',
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE1NTQ3NzM5NCwidWlkIjoyMTc2MjYwNiwiaWFkIjoiMjAyMi0wNC0xMlQxMzo0NjozOS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg0NzExMCwicmduIjoidXNlMSJ9.mpXq7PtWbmneakwja8iB091bZFnElYif7Ji1IyBmmSA',
-                'API-Version' : '2023-07'
+                'Authorization' : defaultApi,
+                'API-Version' : apiVerison
             },
             body: JSON.stringify({query})
         }
@@ -70,8 +83,7 @@ const verifierGetItemFromMonday = async () => {
                     }
                 }
             }
-        }
-    `;
+        }`;
     let itemCount = 0;
 
     let titleCheckData = await mondayFetch(itemQuery); 
@@ -84,8 +96,8 @@ const verifierGetItemFromMonday = async () => {
         validItemValues.id = titleCheckData.data.items_page_by_column_values.items[0].id;
         const validItemTitles = Object.keys(validItemTitlesId);
         for(let i=0;i<itemValues.length;i++){
-            if(validItemTitles.includes(itemValues[i].title)){
-                    validItemValues[itemValues[i].title] = itemValues[i].value;
+            if(validItemTitles.includes(itemValues[i].text)){
+                    validItemValues[itemValues[i].text] = itemValues[i].value;
             }
         }
         const keys = Object.keys(validItemValues);
@@ -148,7 +160,7 @@ const verifierUpdateItemToMonday = async(updateData,itemId)=>{
     }
 }
 
-(async()=>{
+const contentSetup = async () => {
     const mondayValues = await verifierGetItemFromMonday();
     const dynamicFrom = document.createElement('div');
     dynamicFrom.id = 'dynamicForm';
@@ -253,9 +265,77 @@ const verifierUpdateItemToMonday = async(updateData,itemId)=>{
     //     contexts:["selection"],  // ContextType
     //     onclick: openingVerifierOptions // A callback function
     // });
+};
+const popupSetup = async () => {
+    console.log('popup');
+    document.body.id ="POPUP";
+    const metas = fixedData.metaInformation;
+    const popupMetaDB = new ChromeStorage('metaInformation');
+    let popupMetaValues = await popupMetaDB.GET();
+    popupMetaValues = popupMetaValues==null?{}:popupMetaValues;
+    const metaKeys = Object.keys(metas);
+    for(let i=0;i<metaKeys.length;i++){
+        const metaKey = metaKeys[i];
+        const meta = metas[metaKey];
+        if(meta.interactive==true){
+            const label = document.createElement('label');
+            label.innerText = meta.title;
+            const input = document.createElement('input');
+            input.setAttribute('type', meta.type);
+            input.setAttribute('id', metaKey);
+            // input.setAttribute('placeholder', meta.title);
+            // input.setAttribute(meta.point, meta.defaultValue);
+            if(popupMetaValues[metaKey]==null){
+                popupMetaValues[metaKey] = meta.defaultValue;
+            }
+            input[meta.point] = popupMetaValues[metaKey];
+            document.body.append(label,input);
+        }else{
+            // readd only
+            const label = document.createElement('label');
+            label.innerText = `${meta.title}: ${popupMetaValues[metaKey]}`;
+            document.body.append(label);
+        }
+    }
+    const saveButton = document.createElement('button');
+    saveButton.innerText = 'Save';
+    saveButton.addEventListener('click', async ()=>{
+        for(let i=0;i<metaKeys.length;i++){
+            if(metas[metaKeys[i]].interactive==true){
+                const metaKey = metaKeys[i];
+                const meta = metas[metaKey];
+                popupMetaValues[metaKey] = document.getElementById(metaKey)[meta.point];
+            }
+        }
+        await popupMetaDB.SET(popupMetaValues);
+        window.close();
+    });
+    document.body.appendChild(saveButton);
+};
 
+(async ()=>{
+    if(typeof window=== 'undefined'){
+        console.log('background');
+        chrome.runtime.onMessage.addListener(
+            function(request, sender, sendResponse) {
+              switch(request.action){
+                case 'userLogout':
+                  chrome.cookies.remove({"url": 'https://facebook.com', "name": 'c_user'}, function(cookie) {});
+                  sendResponse('success');
+                break;
+              }
+            }
+        );
+    }else{
+        if(window.location.href.includes('chrome-extension')){
+           
+            await popupSetup();
+        }else{
+
+            await contentSetup();
+        }
+    }
 })();
-
 
 
 
