@@ -87,7 +87,8 @@ const verifierGetItemFromMonday = async () => {
     let itemCount = 0;
 
     let titleCheckData = await mondayFetch(itemQuery); 
-    if(titleCheckData.data.items_by_column_values.length!=0){
+    // if(titleCheckData.data.items_by_column_values.length!=0){
+    if(titleCheckData.data.items_page_by_column_values.items.length!=0){
         itemCount = titleCheckData.data.items_page_by_column_values.items.length;
         const validItemValues = {};
         // const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
