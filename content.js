@@ -77,9 +77,9 @@ const verifierGetItemFromMonday = async () => {
             items_page_by_column_values (board_id: ${boardId}, columns: [{column_id: "text7", column_values: ["${window.location.href}"]}]) {
                 items{
                     id,
-                    column_values(){
+                    column_values{
                         value,
-                        title
+                        title:text
                     }
                 }
             }
