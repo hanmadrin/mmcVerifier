@@ -55,18 +55,22 @@ const validItemTitlesId = {
     "Status" : "status",
     "URL": "text7",
     "Series": "text0",
+    "License#": "text__1",
+    "License State": "text9__1",
 };
 const statusToIndexes = {
     "Unverified": 5,
     "Verified": 1,
     "BAD": 4,
     "Verified W/Vin": 17,
+    "Verified W/License": 158
 }
 const indexToStatus = {
     1: "Verified",
     4: "BAD",
     5: "Unverified",
     17: "Verified W/Vin",
+    158: "Verified W/License"
 }
 
 const verifierGetItemFromMonday = async () => {
@@ -211,6 +215,10 @@ const contentSetup = async () => {
         // seriesRow.appendChild(seriesKeyCell);
         // seriesRow.appendChild(seriesValueCell);
         // table.appendChild(seriesRow);
+        
+        
+
+
     
         //Vin#
         const vinRow = document.createElement('tr');
@@ -224,6 +232,77 @@ const contentSetup = async () => {
         vinRow.appendChild(vinKeyCell);
         vinRow.appendChild(vinValueCell);
         table.appendChild(vinRow);
+
+
+        // License#
+        const licenseRow = document.createElement('tr');
+        const licenseKeyCell = document.createElement('td');
+        licenseKeyCell.innerText = "License#";
+        const licenseValueCell = document.createElement('td');
+        const licenseInput = document.createElement('input');
+        licenseInput.id = 'verifierLicense';
+        licenseInput.value = mondayValues['License#'];
+        licenseValueCell.appendChild(licenseInput);
+        licenseRow.appendChild(licenseKeyCell);
+        licenseRow.appendChild(licenseValueCell);
+        table.appendChild(licenseRow);
+
+
+        // License State
+        const licenseStateRow = document.createElement('tr');
+        const licenseStateKeyCell = document.createElement('td');
+        licenseStateKeyCell.innerText = "License State";
+        const licenseStateValueCell = document.createElement('td');
+        const licenseStateInput = document.createElement('input');
+        licenseStateInput.id = 'verifierLicenseState';
+        // list=states
+        licenseStateInput.setAttribute('list','states');
+        licenseStateInput.value = mondayValues['License State'];
+        // options
+        // const states = ['Wisconsin','Illinois','Tennessee','Mississippi','Alabama','Florida','Georgia','South Carolina','North Carolina','Kentucky','Virginia','Indiana','Michigan','Ohio','Pennsylvania','New York','Maine','New Hampshire','Vermont','Massachusetts','Rhode Island','Connecticut','New Jersey','Delaware','Maryland','West Virginia']
+        const states = {
+            'Wisconsin': 'WI',
+            'Illinois': 'IL',
+            'Tennessee': 'TN',
+            'Mississippi': 'MS',
+            'Alabama': 'AL',
+            'Florida': 'FL',
+            'Georgia': 'GA',
+            'South Carolina': 'SC',
+            'North Carolina': 'NC',
+            'Kentucky': 'KY',
+            'Virginia': 'VA',
+            'Indiana': 'IN',
+            'Michigan': 'MI',
+            'Ohio': 'OH',
+            'Pennsylvania': 'PA',
+            'New York': 'NY',
+            'Maine': 'ME',
+            'New Hampshire': 'NH',
+            'Vermont': 'VT',
+            'Massachusetts': 'MA',
+            'Rhode Island': 'RI',
+            'Connecticut': 'CT',
+            'New Jersey': 'NJ',
+            'Delaware': 'DE',
+            'Maryland': 'MD',
+            'West Virginia': 'WV'
+        }
+        // data lists
+        const statesDataList = document.createElement('datalist');
+        statesDataList.id = 'states';
+        const statesKeys = Object.keys(states);
+        for(let i=0;i<statesKeys.length;i++){
+            const stateOption = document.createElement('option');
+            stateOption.value = statesKeys[i];
+            statesDataList.appendChild(stateOption);
+        }
+        document.body.appendChild(statesDataList);
+
+        licenseStateValueCell.appendChild(licenseStateInput);
+        licenseStateRow.appendChild(licenseStateKeyCell);
+        licenseStateRow.appendChild(licenseStateValueCell);
+        table.appendChild(licenseStateRow);
     
         //save button
         const saveButton = document.createElement('button');
@@ -235,6 +314,8 @@ const contentSetup = async () => {
             const updates = {};
             updates['Status'] = statusSelect.value;
             // updates['Series'] = seriesInput.value;
+            updates['License#'] = licenseInput.value;
+            updates['License State'] = licenseStateInput.value;
             updates['Vin#'] = vinInput.value;
             await verifierUpdateItemToMonday(updates,mondayValues.id);
             const updatedNotification = document.createElement('div');
