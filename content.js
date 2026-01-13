@@ -29,20 +29,39 @@ const fixedData = {
     }
 };
 const sleep = (ms) => {return new Promise(resolve => setTimeout(resolve, ms));}
-const mondayFetch = async (query,apiVerison="2024-01") => {
+// const mondayFetch = async (query,apiVerison="2024-01") => {
+//     const metaInformation = new ChromeStorage('metaInformation');
+//     const metaInformationValues = await metaInformation.GET();
+//     const defaultApi = metaInformationValues.defaultApi;
+//     const mondayResponse = await fetch (
+//         "https://api.monday.com/v2",
+//         {
+//             method: 'post',
+//             headers:{
+//                 'Content-Type': 'application/json',
+//                 'Authorization' : defaultApi,
+//                 'API-Version' : apiVerison
+//             },
+//             body: JSON.stringify({query})
+//         }
+//     );
+//     return await mondayResponse.json();
+// }
+// content_script.js
+const mondayFetch = async (query, apiVersion = "2024-01") => {
     const metaInformation = new ChromeStorage('metaInformation');
     const metaInformationValues = await metaInformation.GET();
     const defaultApi = metaInformationValues.defaultApi;
-    const mondayResponse = await fetch (
-        "https://api.monday.com/v2",
+    const mondayResponse = await fetch(
+        `https://monday.weuit.com/monday`,
         {
-            method: 'post',
-            headers:{
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization' : defaultApi,
-                'API-Version' : apiVerison
+                'Authorization': defaultApi,
+                'API-Version': apiVersion
             },
-            body: JSON.stringify({query})
+            body: JSON.stringify({ query })
         }
     );
     return await mondayResponse.json();

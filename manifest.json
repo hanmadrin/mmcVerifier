@@ -11,16 +11,26 @@
         "cookies",
         "contextMenus"
     ],
+    "background": {
+        "service_worker": "background.js"
+    },
     "action": {
         "default_popup": "popup.html"
     },
-    "content_scripts":[
+    "host_permissions": [
+        "https://api.monday.com/*"
+    ],
+    "content_scripts": [
         {
             "matches": [
                 "https://www.facebook.com/marketplace/item/*"
             ],
-            "js": ["content.js"],
-            "css": ["content.css"],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "content.css"
+            ],
             "run_at": "document_idle"
         }
     ]
